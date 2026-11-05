@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="LUDIKI, серия 2 «Экспресс» — мультфильм со звуком, 34 секунды.">
+<meta name="theme-color" content="#ECEDEF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151618" media="(prefers-color-scheme: dark)">
+<meta property="og:title" content="LUDIKI — серия 2">
+<meta property="og:description" content="Серия 2 «Экспресс»: один заглядывает в телефон — и все радуются.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232A2C30'/%3E%3Cpath d='M24 18v28l22-14z' fill='%23F6F6F7'/%3E%3C/svg%3E">
+<title>LUDIKI — серия 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rubik:wght@700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rubik:wght@700;900&display=swap"></noscript>
+<style>
+html{color-scheme:light}
+body{margin:0}
+/* Minimal grey page: small wordmark, one 16:9 player, one line of footer */
+:root{
+  --bg:#ECEDEF; --surface:#F6F6F7; --fg:#1F2124; --muted:#6B6F76; --line:#D8DADE;
+  --chrome:#2A2C30; --chrome-fg:#EDEEF0; --chrome-muted:#9A9EA6; --chrome-hover:#3A3D42;
+  --btn:#2A2C30; --btn-fg:#F6F6F7; --scrim:rgba(24,25,28,.62); --stage-bg:#FFFFFF;
+  --font:"Inter","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bg:#151618; --surface:#1D1E21; --fg:#E9EAEC; --muted:#8E929A; --line:#2B2D31; --chrome:#202225; --chrome-hover:#2E3034; --btn:#E9EAEC; --btn-fg:#1A1B1E; color-scheme:dark; }
+}
+:root[data-theme="dark"]{ --bg:#151618; --surface:#1D1E21; --fg:#E9EAEC; --muted:#8E929A; --line:#2B2D31; --chrome:#202225; --chrome-hover:#2E3034; --btn:#E9EAEC; --btn-fg:#1A1B1E; color-scheme:dark; }
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:16px;line-height:1.5}
+.page{max-width:960px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 40px;display:flex;flex-direction:column;gap:24px;min-height:100vh}
+.top{display:flex;align-items:baseline;justify-content:space-between;gap:8px 24px;flex-wrap:wrap;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.brand{margin:0;font-weight:600;font-size:15px;letter-spacing:.32em;text-transform:uppercase}
+.sub{margin:0;font-size:14px;color:var(--muted)}
+.sub a{color:var(--fg);font-weight:600;text-decoration:none;border-bottom:1px solid var(--line)}
+.sub a:hover{border-color:var(--fg)}
+.player{border-radius:10px;overflow:hidden;background:var(--chrome);border:1px solid var(--line)}
+.stage{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--stage-bg);container-type:inline-size;cursor:pointer;user-select:none;-webkit-user-select:none}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.player:fullscreen{display:flex;flex-direction:column;justify-content:center;border-radius:0;border:0;background:#000}
+.player:fullscreen .stage{width:min(100vw,calc((100vh - 60px) * 16 / 9));margin-inline:auto}
+.poster{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:1.2cqw;padding:4cqw;background:linear-gradient(180deg,rgba(24,25,28,0) 50%,var(--scrim) 100%);color:#fff;cursor:default}
+.poster p{margin:0}
+.poster .ep{font-weight:500;letter-spacing:.16em;text-transform:uppercase;font-size:clamp(10px,1.3cqw,14px);opacity:.9}
+.bigplay{display:inline-flex;align-items:center;gap:.6em;border:0;border-radius:999px;background:var(--btn);color:var(--btn-fg);font:600 clamp(14px,1.8cqw,19px)/1 var(--font);padding:.85em 1.4em .85em 1.1em;cursor:pointer}
+.bigplay svg{width:1.05em;height:1.05em;fill:currentColor}
+.bigplay:hover{opacity:.9}
+.bigplay:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.fail{position:absolute;inset:0;display:grid;place-content:center;padding:24px;text-align:center;background:var(--chrome);color:var(--chrome-fg);font-weight:500}
+.controls{display:flex;align-items:center;gap:10px 14px;padding:8px 12px 10px;color:var(--chrome-fg);background:var(--chrome)}
+.ctl{flex:none;display:grid;place-items:center;width:38px;height:38px;border:0;border-radius:8px;background:transparent;color:var(--chrome-fg);cursor:pointer}
+.ctl svg{width:21px;height:21px;fill:currentColor}
+.ctl:hover{background:var(--chrome-hover)}
+.ctl:focus-visible{outline:2px solid var(--chrome-fg);outline-offset:1px}
+.time{flex:none;font-variant-numeric:tabular-nums;font-weight:500;font-size:13px;color:var(--chrome-muted);min-width:7.6ch}
+.time b{color:var(--chrome-fg);font-weight:600}
+.scrub{position:relative;flex:1;min-width:0;height:38px;display:flex;align-items:center}
+.scrub input{width:100%;margin:0;accent-color:var(--chrome-fg);cursor:pointer}
+.ticks{display:none}
+.foot{margin:auto 0 0;font-size:13px;color:var(--muted)}
+@media (hover:none){ .foot{display:none} }
+@media (max-width:520px){ .controls{flex-wrap:wrap;padding:6px 8px 8px} .scrub{order:-1;flex-basis:100%} .time{margin-right:auto} .player{border-radius:8px} }
+
+/* episode 2 overlays */
+.ov-title{position:absolute;left:50%;top:66%;display:flex;flex-direction:column;align-items:center;gap:.6cqw;pointer-events:none;transform-origin:50% 50%;font-family:"Rubik",var(--font);color:#fff;text-align:center;line-height:1}
+.ov-title .ov-ep{background:#FF5A4E;border:.35cqw solid #221C24;border-radius:999px;padding:.6cqw 2cqw;font-weight:700;font-size:2.6cqw;letter-spacing:.08em;text-transform:uppercase}
+.ov-title .ov-name{font-weight:900;font-size:7.2cqw;-webkit-text-stroke:.5cqw #221C24;paint-order:stroke fill;text-shadow:0 .5cqw 0 #221C24;color:#FFE14D}
+.ov-iris{position:absolute;inset:0;pointer-events:none}
+.ov-end{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;font-family:"Rubik",var(--font);font-weight:700;font-size:4cqw;color:#FFE14D}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <h1 class="brand">Ludiki</h1>
+    <p class="sub"><a href="index.html">← Серия 1</a> · Серия 2 · «Экспресс» · 34 секунды</p>
+  </header>
+
+  <section class="player" id="player" aria-label="LUDIKI, серия 2">
+    <div class="stage" id="stage">
+      <canvas id="scene" aria-label="Мультфильм LUDIKI, серия 2"></canvas>
+      <div class="ov-title" id="ovTitle" aria-hidden="true" hidden><span class="ov-ep">Серия 2</span><span class="ov-name">Экспресс</span></div>
+      <div class="ov-iris" id="ovIris" aria-hidden="true" hidden></div>
+      <div class="ov-end" id="ovEnd" aria-hidden="true" hidden><span>Продолжение следует…</span></div>
+      <div class="poster" id="poster">
+        <p class="ep" id="posterEp">Серия 2 · со звуком</p>
+        <button class="bigplay" id="start" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.4-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg><span id="startLabel">Смотреть</span></button>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="ctl" id="play" type="button" aria-label="Смотреть"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="playIcon" d="M7 4.5v15a1 1 0 0 0 1.5.86l12.4-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg></button>
+      <div class="time" id="time"><b>0:00</b> / 0:34</div>
+      <div class="scrub"><input id="scrub" type="range" min="0" max="340" step="1" value="0" aria-label="Перемотка"></div>
+      <button class="ctl" id="sound" type="button" aria-label="Выключить звук" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="soundIcon" d="M4 9h3.5L12 5v14l-4.5-4H4zM15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/></svg></button>
+      <button class="ctl" id="fs" type="button" aria-label="Во весь экран"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/></svg></button>
+    </div>
+  </section>
+
+  <p class="foot">Пробел — пауза, стрелки — перемотка на 2 секунды.</p>
+</div>
+<script>
+window.__report=function(msg){ try{ var h=document.getElementById('stage')||document.body; if(h.querySelector('.fail[data-r]')) return; var d=document.createElement('div'); d.className='fail'; d.setAttribute('data-r','1'); d.textContent='Ошибка: '+msg; h.appendChild(d); }catch(e){} };
+window.addEventListener('error',function(e){ window.__report((e.message||'неизвестная')+(e.lineno?' (строка '+e.lineno+')':'')); });
+window.addEventListener('unhandledrejection',function(e){ window.__report(String(e.reason&&e.reason.message||e.reason)); });
+</script>
+<script src="vendor/three.r128.min.js"></script>
+<script src="ep2/slip.js"></script>
+<script src="ep2/ep2.js"></script>
+</body>
+</html>
