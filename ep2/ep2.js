@@ -550,7 +550,7 @@ const AudioEngine=(function(){
     coin:(w,e)=>{ osc(w,'square',e.f,0.06,0.025); osc(w+0.06,'square',e.f*1.335,0.18,0.025); }
   };
   return {
-    init(){ if(ctx){ if(ctx.state==='suspended') ctx.resume(); return; } const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return; try{ ctx=new AC(); }catch(e){ ctx=null; return; }
+    init(){ if(ctx){ if(ctx.state==='suspended') ctx.resume(); return; } const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return; try{ ctx=new AC(); }catch(e){ ctx=null; return; } if(ctx.state==='suspended'&&ctx.resume) ctx.resume(); try{ if(navigator.audioSession) navigator.audioSession.type='playback'; }catch(e){}
       master=ctx.createGain(); master.gain.value=muted?0:0.85; const comp=ctx.createDynamicsCompressor(); master.connect(comp); comp.connect(ctx.destination);
       const len=ctx.sampleRate*3; noiseBuf=ctx.createBuffer(1,len,ctx.sampleRate); const d=noiseBuf.getChannelData(0); for(let i=0;i<len;i++) d[i]=Math.random()*2-1; },
     seek(T){ idx=0; while(idx<EV.length&&EV[idx].t<T) idx++; },
@@ -564,6 +564,27 @@ const AudioEngine=(function(){
       [ctx,master,noiseBuf]=live;
       return oc.startRendering();
     }
+  };
+})();
+
+/* ---------- soundtrack file ----------
+   iPhone mutes Web Audio when the ring/silent switch is off, so the episode plays a pre-rendered
+   track through a normal <audio> element (that plays like video sound) and the picture follows its clock.
+   If the file can't load or play, we fall back to the live Web Audio engine. */
+const Track=(function(){
+  const a=new Audio(); let ok=true, wait=0;
+  a.preload='auto'; a.setAttribute('playsinline',''); a.src='audio/ep2.mp3';
+  a.addEventListener('error',()=>{ ok=false; });
+  return {
+    get on(){ return ok; },
+    start(t){ if(!ok) return false; try{ a.currentTime=t; }catch(e){} wait=0;
+      const p=a.play(); if(p&&p.catch) p.catch(()=>{ ok=false; try{ AudioEngine.init(); AudioEngine.seek(T); }catch(e){} }); return true; },
+    stop(){ try{ a.pause(); }catch(e){} },
+    seek(t){ if(ok) try{ a.currentTime=t; }catch(e){} },
+    mute(m){ a.muted=m; },
+    clock(t,dt){ if(!ok) return t+dt;
+      if(!a.paused&&a.readyState>=2&&a.currentTime>0){ wait=0; const c=a.currentTime; if(Math.abs(c-t)>0.35){ try{ a.currentTime=t; }catch(e){} return t+dt; } return c; }
+      wait+=dt; return wait>1.5?t+dt:t; }
   };
 })();
 
@@ -582,15 +603,16 @@ function render(){
 }
 function setPlaying(p){
   playing=p; playIcon.setAttribute('d',p?PAUSE_D:PLAY_D); playBtn.setAttribute('aria-label',p?'Пауза':'Смотреть');
-  if(p){ try{ AudioEngine.init(); AudioEngine.seek(T); }catch(e){} posterVisible=false; posterEl.hidden=true; last=performance.now(); }
+  if(p){ if(!Track.start(T)){ try{ AudioEngine.init(); AudioEngine.seek(T); }catch(e){} } posterVisible=false; posterEl.hidden=true; last=performance.now(); }
+  else Track.stop();
   dirty=true;
 }
 function play(){ if(T>=DUR-0.01) T=0; setPlaying(true); }
 function pause(){ setPlaying(false); }
-function seek(t){ T=clamp(t,0,DUR); AudioEngine.seek(T); if(posterVisible){ posterVisible=false; posterEl.hidden=true; } dirty=true; }
+function seek(t){ T=clamp(t,0,DUR); AudioEngine.seek(T); Track.seek(T); if(posterVisible){ posterVisible=false; posterEl.hidden=true; } dirty=true; }
 function frame(now){
   const dt=Math.min((now-last)/1000,0.1); last=now;
-  if(playing){ T=Math.min(DUR,T+dt); AudioEngine.tick(T); if(T>=DUR){ setPlaying(false); posterEp.textContent='Конец серии'; startLabel.textContent='Смотреть ещё раз'; posterVisible=true; posterEl.hidden=false; } dirty=true; }
+  if(playing){ T=Math.min(DUR,Track.clock(T,dt)); if(!Track.on) AudioEngine.tick(T); if(T>=DUR){ setPlaying(false); posterEp.textContent='Конец серии'; startLabel.textContent='Смотреть ещё раз'; posterVisible=true; posterEl.hidden=false; } dirty=true; }
   if(dirty){ dirty=false; try{ render(); }catch(e){ window.__report('кадр: '+((e&&e.message)||e)); } }
   requestAnimationFrame(frame);
 }
@@ -600,7 +622,7 @@ stage.addEventListener('click',e=>{ if(posterEl.contains(e.target)) return; play
 playBtn.addEventListener('click',()=>{ playing?pause():play(); });
 scrub.addEventListener('input',()=>{ scrubbing=true; seek(scrub.value/10); });
 scrub.addEventListener('change',()=>{ scrubbing=false; });
-soundBtn.addEventListener('click',()=>{ muted=!muted; AudioEngine.setMuted(muted); soundBtn.setAttribute('aria-pressed',String(muted)); soundBtn.setAttribute('aria-label',muted?'Включить звук':'Выключить звук'); soundIcon.setAttribute('d',muted?'M4 9h3.5L12 5v14l-4.5-4H4zM16 9l5 6M21 9l-5 6':'M4 9h3.5L12 5v14l-4.5-4H4zM15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12'); });
+soundBtn.addEventListener('click',()=>{ muted=!muted; AudioEngine.setMuted(muted); Track.mute(muted); soundBtn.setAttribute('aria-pressed',String(muted)); soundBtn.setAttribute('aria-label',muted?'Включить звук':'Выключить звук'); soundIcon.setAttribute('d',muted?'M4 9h3.5L12 5v14l-4.5-4H4zM16 9l5 6M21 9l-5 6':'M4 9h3.5L12 5v14l-4.5-4H4zM15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12'); });
 if(!(document.fullscreenEnabled&&playerEl.requestFullscreen)) fsBtn.hidden=true;
 fsBtn.addEventListener('click',()=>{ try{ if(document.fullscreenElement) document.exitFullscreen().catch(()=>{}); else { const r=playerEl.requestFullscreen(); if(r&&r.catch) r.catch(()=>{}); } }catch(e){} });
 document.addEventListener('keydown',e=>{
