@@ -555,7 +555,15 @@ const AudioEngine=(function(){
       const len=ctx.sampleRate*3; noiseBuf=ctx.createBuffer(1,len,ctx.sampleRate); const d=noiseBuf.getChannelData(0); for(let i=0;i<len;i++) d[i]=Math.random()*2-1; },
     seek(T){ idx=0; while(idx<EV.length&&EV[idx].t<T) idx++; },
     tick(T){ if(!ctx) return; const now=ctx.currentTime; while(idx<EV.length&&EV[idx].t<=T+0.12){ const e=EV[idx]; if(e.t>=T-0.06){ try{ PLAY[e.k](now+Math.max(0,e.t-T),e); }catch(err){} } idx++; } },
-    setMuted(m){ muted=m; if(ctx&&master) master.gain.setTargetAtTime(m?0:0.85,ctx.currentTime,0.05); }
+    setMuted(m){ muted=m; if(ctx&&master) master.gain.setTargetAtTime(m?0:0.85,ctx.currentTime,0.05); },
+    renderOffline(sr){ // whole soundtrack in one go, used to export the episode as a video file
+      const live=[ctx,master,noiseBuf]; const oc=new OfflineAudioContext(2,Math.ceil(sr*DUR),sr); ctx=oc;
+      master=oc.createGain(); master.gain.value=0.85; const comp=oc.createDynamicsCompressor(); master.connect(comp); comp.connect(oc.destination);
+      const len=sr*3; noiseBuf=oc.createBuffer(1,len,sr); const d=noiseBuf.getChannelData(0); for(let i=0;i<len;i++) d[i]=Math.random()*2-1;
+      EV.forEach(e=>{ try{ PLAY[e.k](Math.max(0,e.t),e); }catch(err){} });
+      [ctx,master,noiseBuf]=live;
+      return oc.startRendering();
+    }
   };
 })();
 
@@ -606,6 +614,9 @@ function resize(){ const w=stage.clientWidth, h=stage.clientHeight; if(!w||!h) r
 if(window.ResizeObserver) new ResizeObserver(resize).observe(stage); else window.addEventListener('resize',resize);
 resize();
 if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>{ /* redraw +907 with the round font once it loads */ const c=plusTex.image, g=c.getContext('2d'); g.clearRect(0,0,c.width,c.height); g.font='900 170px "Rubik","Inter",sans-serif'; g.textAlign='center'; g.textBaseline='middle'; g.lineJoin='round'; g.lineWidth=34; g.strokeStyle='#221C24'; g.strokeText('+907',256,116); g.lineWidth=14; g.strokeStyle='#FFFFFF'; g.strokeText('+907',256,116); g.fillStyle='#35C13A'; g.fillText('+907',256,116); plusTex.needsUpdate=true; dirty=true; });
+window.__renderAudio=function(sr){ return AudioEngine.renderOffline(sr||44100).then(buf=>{ const L=buf.getChannelData(0), R=buf.getChannelData(1), n=L.length, out=new Int16Array(n*2);
+  for(let i=0;i<n;i++){ out[2*i]=Math.max(-1,Math.min(1,L[i]))*32767; out[2*i+1]=Math.max(-1,Math.min(1,R[i]))*32767; }
+  const u8=new Uint8Array(out.buffer); let bin=''; for(let i=0;i<u8.length;i+=0x8000) bin+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000)); return btoa(bin); }); };
 window.__seek=function(t){ posterVisible=false; posterEl.hidden=true; T=t; render(); };
 requestAnimationFrame(frame);
 }catch(err){ window.__report((err&&err.message)||String(err)); }
