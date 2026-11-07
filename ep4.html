@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="LUDIKI, серия 4 — мультфильм со звуком, 1 минута 33 секунды.">
+<meta name="theme-color" content="#ECEDEF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151618" media="(prefers-color-scheme: dark)">
+<meta property="og:title" content="LUDIKI — серия 4">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232A2C30'/%3E%3Cpath d='M24 18v28l22-14z' fill='%23F6F6F7'/%3E%3C/svg%3E">
+<title>LUDIKI — серия 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"></noscript>
+<style>
+html{color-scheme:light}
+body{margin:0}
+/* Minimal grey page: small wordmark, one 16:9 player, one line of footer */
+:root{
+  --bg:#ECEDEF; --surface:#F6F6F7; --fg:#1F2124; --muted:#6B6F76; --line:#D8DADE;
+  --chrome:#2A2C30; --chrome-fg:#EDEEF0; --chrome-muted:#9A9EA6; --chrome-hover:#3A3D42;
+  --btn:#2A2C30; --btn-fg:#F6F6F7; --scrim:rgba(24,25,28,.62); --stage-bg:#FFFFFF;
+  --font:"Inter","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bg:#151618; --surface:#1D1E21; --fg:#E9EAEC; --muted:#8E929A; --line:#2B2D31; --chrome:#202225; --chrome-hover:#2E3034; --btn:#E9EAEC; --btn-fg:#1A1B1E; color-scheme:dark; }
+}
+:root[data-theme="dark"]{ --bg:#151618; --surface:#1D1E21; --fg:#E9EAEC; --muted:#8E929A; --line:#2B2D31; --chrome:#202225; --chrome-hover:#2E3034; --btn:#E9EAEC; --btn-fg:#1A1B1E; color-scheme:dark; }
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:16px;line-height:1.5}
+.page{max-width:960px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 40px;display:flex;flex-direction:column;gap:24px;min-height:100vh}
+.top{display:flex;align-items:baseline;justify-content:space-between;gap:8px 24px;flex-wrap:wrap;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.brand{margin:0;font-weight:600;font-size:15px;letter-spacing:.32em;text-transform:uppercase}
+.sub{margin:0;font-size:14px;color:var(--muted)}
+.sub a{color:var(--fg);font-weight:600;text-decoration:none;border-bottom:1px solid var(--line)}
+.sub a:hover{border-color:var(--fg)}
+.player{border-radius:10px;overflow:hidden;background:var(--chrome);border:1px solid var(--line)}
+.stage{position:relative;width:100%;max-width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--stage-bg);container-type:inline-size;cursor:pointer;user-select:none;-webkit-user-select:none}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.player:fullscreen{display:flex;flex-direction:column;justify-content:center;border-radius:0;border:0;background:#000}
+.player:fullscreen .stage{width:min(100vw,calc((100vh - 60px) * 16 / 9));margin-inline:auto}
+.poster{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:1.2cqw;padding:4cqw;background:linear-gradient(180deg,rgba(24,25,28,0) 50%,var(--scrim) 100%);color:#fff;cursor:default}
+.poster p{margin:0}
+.poster .ep{font-weight:500;letter-spacing:.16em;text-transform:uppercase;font-size:clamp(10px,1.3cqw,14px);opacity:.9}
+.bigplay{display:inline-flex;align-items:center;gap:.6em;border:0;border-radius:999px;background:var(--btn);color:var(--btn-fg);font:600 clamp(14px,1.8cqw,19px)/1 var(--font);padding:.85em 1.4em .85em 1.1em;cursor:pointer}
+.bigplay svg{width:1.05em;height:1.05em;fill:currentColor}
+.bigplay:hover{opacity:.9}
+.bigplay:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.fail{position:absolute;inset:0;display:grid;place-content:center;padding:24px;text-align:center;background:var(--chrome);color:var(--chrome-fg);font-weight:500}
+.controls{display:flex;align-items:center;gap:10px 14px;padding:8px 12px 10px;color:var(--chrome-fg);background:var(--chrome)}
+.ctl{flex:none;display:grid;place-items:center;width:38px;height:38px;border:0;border-radius:8px;background:transparent;color:var(--chrome-fg);cursor:pointer}
+.ctl svg{width:21px;height:21px;fill:currentColor}
+.ctl:hover{background:var(--chrome-hover)}
+.ctl:focus-visible{outline:2px solid var(--chrome-fg);outline-offset:1px}
+.time{flex:none;font-variant-numeric:tabular-nums;font-weight:500;font-size:13px;color:var(--chrome-muted);min-width:7.6ch}
+.time b{color:var(--chrome-fg);font-weight:600}
+.scrub{position:relative;flex:1;min-width:0;height:38px;display:flex;align-items:center}
+.scrub input{width:100%;margin:0;accent-color:var(--chrome-fg);cursor:pointer}
+.ticks{display:none}
+.foot{margin:auto 0 0;font-size:13px;color:var(--muted)}
+@media (hover:none){ .foot{display:none} }
+@media (max-width:520px){ .controls{flex-wrap:wrap;padding:6px 8px 8px} .scrub{order:-1;flex-basis:100%} .time{margin-right:auto} .player{border-radius:8px} }
+
+
+.stage video{position:absolute;inset:0;width:100%;height:100%;display:block;background:#000;object-fit:contain}
+.poster{background-size:cover;background-position:center}
+.poster.has-img{background-image:linear-gradient(180deg,rgba(24,25,28,0) 50%,var(--scrim) 100%),var(--poster)}
+.stage.playing .poster{display:none}
+</style>
+<link rel="stylesheet" href="embed.css">
+<script src="embed.js"></script>
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <h1 class="brand">Ludiki</h1>
+    <p class="sub"><a href="./">← Все серии</a> · Серия 4 · 1 минута 33 секунды</p>
+  </header>
+
+  <section class="player" id="player" aria-label="LUDIKI, серия 4">
+    <div class="stage" id="stage">
+      <video id="v" playsinline preload="metadata" poster="video/ep4.jpg" src="video/ep4.mp4"></video>
+      <div class="poster has-img" id="poster" style="--poster:url(video/ep4.jpg)">
+        <p class="ep" id="posterEp">Серия 4 · со звуком</p>
+        <button class="bigplay" id="start" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.4-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg><span id="startLabel">Смотреть</span></button>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="ctl" id="play" type="button" aria-label="Смотреть"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="playIcon" d="M7 4.5v15a1 1 0 0 0 1.5.86l12.4-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg></button>
+      <div class="time" id="time"><b>0:00</b> / 1:33</div>
+      <div class="scrub"><input id="scrub" type="range" min="0" max="1000" step="1" value="0" aria-label="Перемотка"></div>
+      <button class="ctl" id="sound" type="button" aria-label="Выключить звук" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path id="soundIcon" d="M4 9h3.5L12 5v14l-4.5-4H4zM15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/></svg></button>
+      <button class="ctl" id="fs" type="button" aria-label="Во весь экран"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"/></svg></button>
+    </div>
+  </section>
+
+  <p class="foot">Пробел — пауза, стрелки — перемотка на 2 секунды.</p>
+</div>
+<script>
+(function(){
+var $=function(id){return document.getElementById(id)};
+var v=$('v'), stage=$('stage'), poster=$('poster'), posterEp=$('posterEp'), startLabel=$('startLabel'),
+    playBtn=$('play'), playIcon=$('playIcon'), timeEl=$('time'), scrub=$('scrub'), soundBtn=$('sound'), soundIcon=$('soundIcon'), fsBtn=$('fs'), player=$('player');
+var PLAY='M7 4.5v15a1 1 0 0 0 1.5.86l12.4-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z', PAUSE='M7 4h3.5v16H7zM13.5 4H17v16h-3.5z';
+var SOUND='M4 9h3.5L12 5v14l-4.5-4H4zM15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12', MUTE='M4 9h3.5L12 5v14l-4.5-4H4zM16 9.5l5 5M21 9.5l-5 5';
+function fmt(t){ t=Math.max(0,Math.floor(t||0)); return Math.floor(t/60)+':'+('0'+(t%60)).slice(-2); }
+var dragging=false;
+function ui(){
+  var d=v.duration||92.9, t=v.currentTime||0;
+  timeEl.innerHTML='<b>'+fmt(t)+'</b> / '+fmt(d);
+  if(!dragging) scrub.value=Math.round(t/d*1000);
+  var playing=!v.paused&&!v.ended;
+  playIcon.setAttribute('d',playing?PAUSE:PLAY);
+  playBtn.setAttribute('aria-label',playing?'Пауза':'Смотреть');
+  stage.classList.toggle('playing',playing||(v.currentTime>0&&!v.ended));
+}
+function toggle(){
+  if(v.ended||v.currentTime>=(v.duration||1e9)-0.05){ v.currentTime=0; }
+  if(v.paused){ var p=v.play(); if(p&&p.catch) p.catch(function(){}); } else v.pause();
+}
+v.addEventListener('timeupdate',ui); v.addEventListener('play',ui); v.addEventListener('pause',ui); v.addEventListener('loadedmetadata',ui);
+v.addEventListener('ended',function(){ ui(); posterEp.textContent='Конец серии'; startLabel.textContent='Смотреть ещё раз'; stage.classList.remove('playing'); try{ parent.postMessage({ludiki:'ended'},'*'); }catch(e){} });
+v.addEventListener('error',function(){ var d=document.createElement('div'); d.className='fail'; d.textContent='Не удалось загрузить видео. Обновите страницу.'; stage.appendChild(d); });
+$('start').addEventListener('click',function(e){ e.stopPropagation(); poster.style.display='none'; toggle(); });
+v.addEventListener('play',function(){ poster.style.display='none'; });
+v.addEventListener('ended',function(){ poster.style.display=''; });
+stage.addEventListener('click',function(e){ if(!poster.contains(e.target)||poster.style.display==='none') toggle(); });
+playBtn.addEventListener('click',function(){ poster.style.display='none'; toggle(); });
+scrub.addEventListener('input',function(){ dragging=true; var d=v.duration||92.9; v.currentTime=scrub.value/1000*d; ui(); });
+scrub.addEventListener('change',function(){ dragging=false; });
+soundBtn.addEventListener('click',function(){ v.muted=!v.muted; soundBtn.setAttribute('aria-pressed',v.muted); soundBtn.setAttribute('aria-label',v.muted?'Включить звук':'Выключить звук'); soundIcon.setAttribute('d',v.muted?MUTE:SOUND); });
+fsBtn.addEventListener('click',function(){
+  var fsEl=document.fullscreenElement||document.webkitFullscreenElement;
+  if(fsEl){ (document.exitFullscreen||document.webkitExitFullscreen).call(document); return; }
+  if(player.requestFullscreen) player.requestFullscreen().catch(function(){});
+  else if(player.webkitRequestFullscreen) player.webkitRequestFullscreen();
+  else if(v.webkitEnterFullscreen) v.webkitEnterFullscreen();
+});
+document.addEventListener('keydown',function(e){
+  var t=e.target&&e.target.tagName; if(t==='INPUT'&&e.target.type!=='range'||t==='BUTTON'&&e.code==='Space') return;
+  if(e.code==='Space'){ e.preventDefault(); poster.style.display='none'; toggle(); }
+  else if(e.code==='ArrowRight'){ e.preventDefault(); v.currentTime=Math.min(v.duration||0,v.currentTime+2); }
+  else if(e.code==='ArrowLeft'){ e.preventDefault(); v.currentTime=Math.max(0,v.currentTime-2); }
+});
+ui();
+})();
+</script>
+</body>
+</html>

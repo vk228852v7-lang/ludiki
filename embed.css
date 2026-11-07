@@ -1,0 +1,4 @@
+/* Страница серии, открытая внутри общей страницы (?embed): без шапки и подвала */
+html.embed .top,html.embed .foot{display:none}
+html.embed .page{padding:0;min-height:0;gap:0}
+html.embed body{background:transparent}
